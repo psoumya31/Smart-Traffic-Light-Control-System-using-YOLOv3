@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Video Feed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #video-container {
+            position: relative;
+        }
+        #video {
+            max-width: 100%;
+        }
+        #info {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <h1>Real-Time Vehicle and Pedestrian Count</h1>
+        <img id="video" src="{{ url_for('video_feed') }}" />
+        <div id="info">
+            <p>Pedestrians: <span id="pedestrian-count">0</span></p>
+            <p>Vehicles: <span id="vehicle-count">0</span></p>
+        </div>
+    </div>
+
+    <script>
+        function updateCounts() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('pedestrian-count').textContent = data.pedestrian_count;
+                    document.getElementById('vehicle-count').textContent = data.vehicle_count;
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+
+        setInterval(updateCounts, 1000);
+    </script>
+</body>
+</html>
